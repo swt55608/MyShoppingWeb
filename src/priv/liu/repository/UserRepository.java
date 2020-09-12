@@ -37,17 +37,29 @@ public class UserRepository {
 		int rowsUpdated;
 		boolean isSuccussful = false;
 		try {
-			String sql = "INSERT INTO users (username, password)"
-					+ " VALUES (?, ?);";
-			PreparedStatement prestmt = _con.prepareStatement(sql);
-			prestmt.setString(1, user.getUsername());
-			prestmt.setString(2, user.getPassword());
-			rowsUpdated = prestmt.executeUpdate();
-			isSuccussful = rowsUpdated > 0;
+			if (isUsernameExisting(user)) {
+				String sql = "INSERT INTO users (username, password)"
+						+ " VALUES (?, ?);";
+				PreparedStatement prestmt = _con.prepareStatement(sql);
+				prestmt.setString(1, user.getUsername());
+				prestmt.setString(2, user.getPassword());
+				rowsUpdated = prestmt.executeUpdate();
+				isSuccussful = rowsUpdated > 0;
+				prestmt.close();
+			}			
 		} catch (SQLException e) {
 			System.out.println("Registration Failure!");
 		}
 		return isSuccussful;
+	}
+	
+	private boolean isUsernameExisting(User user) throws SQLException {
+		String sql = "SELECT * FROM users"
+				+ "WHERE username=?;";
+		PreparedStatement prestmt = _con.prepareStatement(sql);
+		prestmt.setString(1, user.getUsername());
+		ResultSet rs = prestmt.executeQuery();
+		return !rs.next();
 	}
 	
 	public boolean login(User user) {
@@ -60,6 +72,8 @@ public class UserRepository {
 			prestmt.setString(2, user.getPassword());
 			ResultSet rs = prestmt.executeQuery();
 			isSuccessful = rs.next();
+			rs.close();
+			prestmt.close();
 		} catch (SQLException e) {
 			System.out.println("Login Failure!");
 		}
