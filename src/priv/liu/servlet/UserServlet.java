@@ -27,20 +27,23 @@ public class UserServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		User user = new User(username, password);
-		switch (action) {
-		case "register":
-			String isRegisterSuccussful = register(user) ? "successful" : "Failed";
-			System.out.println(isRegisterSuccussful + " registration");			
-			break;
-		case "login":
-			String isLoginSuccussful = login(user) ? "Successful" : "Failed";
-			System.out.println(isLoginSuccussful + " login");
-			break;
-			
-		default:
-			
-			break;
+		if (username.isEmpty() || username == null || password.isEmpty() || password == null) {
+			System.out.println("There're should NOT be empty in your username or password.");
+		} else {
+			User user = new User(username, password);
+			switch (action) {
+			case "register":
+				String isRegisterSuccussful = register(user) ? "Successful" : "Failed";
+				System.out.println(isRegisterSuccussful + " registration");			
+				break;
+			case "login":
+				String isLoginSuccussful = login(user) ? "Successful" : "Failed";
+				System.out.println(isLoginSuccussful + " login");
+				break;
+			default:
+				System.out.println("Undefined Action.");
+				break;
+			}
 		}
 	}
 	
