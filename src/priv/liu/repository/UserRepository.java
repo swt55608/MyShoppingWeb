@@ -3,7 +3,9 @@ package priv.liu.repository;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import priv.liu.entity.User;
 
@@ -46,5 +48,21 @@ public class UserRepository {
 			System.out.println("Registration Failure!");
 		}
 		return isSuccussful;
+	}
+	
+	public boolean login(User user) {
+		boolean isSuccessful = false;
+		try {
+			String sql = "SELECT * FROM users"
+					+ " WHERE username=? AND password=?;";
+			PreparedStatement prestmt = _con.prepareStatement(sql);
+			prestmt.setString(1, user.getUsername());
+			prestmt.setString(2, user.getPassword());
+			ResultSet rs = prestmt.executeQuery();
+			isSuccessful = rs.next();
+		} catch (SQLException e) {
+			System.out.println("Login Failure!");
+		}
+		return isSuccessful;
 	}
 }
