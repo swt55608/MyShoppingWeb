@@ -18,10 +18,20 @@ public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private UserRepository _userRepository;
+	private boolean _isUserLogin;
 
 	public UserServlet() {
 		super();
 		_userRepository = new UserRepository();
+		_isUserLogin = false;
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		logout(session);
+		System.out.println(!_isUserLogin + " logout");
+		
+		request.getRequestDispatcher("testview.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,39 +42,50 @@ public class UserServlet extends HttpServlet {
 		System.out.println("username: " + username + ", password: " + password);
 		
 		HttpSession session = request.getSession();
-		if (username.isEmpty() || username == null || password.isEmpty() || password == null) {
+		if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
 			System.out.println("There're should NOT be empty in your username or password.");
 		} else {
 			User user = new User(username, password);
-			boolean isSuccussful = false;
 			switch (action) {
 			case "register":
-				isSuccussful = register(user);
-				System.out.println(isSuccussful + " registration");			
+				register(user, session);
+				System.out.println(_isUserLogin + " registration");			
 				break;
 			case "login":
-				isSuccussful = login(user);
-				System.out.println(isSuccussful + " login");
+				login(user, session);
+				System.out.println(_isUserLogin + " login");
 				break;
 			default:
 				System.out.println("Undefined Action.");
 				break;
 			}
-			
-			if (isSuccussful) {
-				session.setAttribute("username", user.getUsername());
-//				request.getRequestDispatcher("testview.jsp").forward(request, response);
-			}
-				
 		}
+		request.getRequestDispatcher("testview.jsp").forward(request, response);
 	}
 	
-	private boolean register(User user) {
-		return _userRepository.register(user);
+	private boolean register(User user, HttpSession session) {
+		if (_userRepository.register(user)) {
+			session.setAttribute("username", user.getUsername());
+			_isUserLogin = true;
+		}
+		return _isUserLogin;
 	}
 	
-	private boolean login(User user) {
-		return _userRepository.login(user);
+	private boolean login(User user, HttpSession session) {
+		if (_userRepository.login(user)) {
+			session.setAttribute("username", user.getUsername());
+			_isUserLogin = true;
+		}
+		return _isUserLogin;
+	}
+	
+	private boolean logout(HttpSession session) {
+		if (_isUserLogin) {
+			session.removeAttribute("username");
+			session.invalidate();
+			_isUserLogin = false;
+		}
+		return !_isUserLogin;
 	}
 
 }
