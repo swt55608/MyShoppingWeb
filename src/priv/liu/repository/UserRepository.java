@@ -48,14 +48,15 @@ public class UserRepository {
 				prestmt.close();
 			}			
 		} catch (SQLException e) {
-			System.out.println("Registration Failure!");
+//			System.out.println("Registration Failure!");
+			e.printStackTrace();
 		}
 		return isSuccussful;
 	}
 	
 	private boolean isUsernameExisting(User user) throws SQLException {
 		String sql = "SELECT * FROM users"
-				+ "WHERE username=?;";
+				+ " WHERE username=?;";
 		PreparedStatement prestmt = _con.prepareStatement(sql);
 		prestmt.setString(1, user.getUsername());
 		ResultSet rs = prestmt.executeQuery();
