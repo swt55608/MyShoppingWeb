@@ -7,9 +7,11 @@ import java.util.Map;
 
 public class Cart {
 	private List<Product> _products;
+	private Map<String, Integer> _productQuantities;
 	
 	public Cart() {
 		_products = new ArrayList<Product>();
+		_productQuantities = new HashMap<String, Integer>();
 	}
 
 	public List<Product> getProducts() {
@@ -20,7 +22,10 @@ public class Cart {
 		if (!isExistingInCart(product)) {
 			_products.add(product);
 			_productQuantities.put(product.getName(), 1);
-		} 
+		} else {
+			int newQuantity = _productQuantities.get(product.getName()) + 1;
+			_productQuantities.put(product.getName(), newQuantity);
+		}
 	}
 	
 	private boolean isExistingInCart(Product product) {
@@ -32,5 +37,8 @@ public class Cart {
 		return isExisting;
 	}
 	
+	public Map<String, Integer> getProductQuantities() {
+		return _productQuantities;
+	}
 	
 }

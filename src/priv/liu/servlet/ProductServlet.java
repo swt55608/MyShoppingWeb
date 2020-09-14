@@ -50,6 +50,7 @@ public class ProductServlet extends HttpServlet {
 			cart = getCart(session);
 			cart.add(product);
 			session.setAttribute("cart", cart);
+			session.setAttribute("productQuantities", cart.getProductQuantities());
 			request.getRequestDispatcher("testproductview.jsp").forward(request, response);
 			break;
 			
