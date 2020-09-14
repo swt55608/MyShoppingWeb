@@ -13,24 +13,7 @@ public class UserRepository {
 	private Connection _con;
 	
 	public UserRepository() {
-		String driverName = "com.mysql.jdbc.Driver";
-		String dbUrl = "jdbc:mysql://localhost/myshoppingweb?serverTimezone=UTC";
-		String dbUser = "root";
-		String dbPassword = "test1234";
-		_con = createConnection(driverName, dbUrl, dbUser, dbPassword);
-	}
-	
-	private Connection createConnection(String driverName, String dbUrl, String dbUser, String dbPassword) {
-		Connection con = null;
-		try {
-			Class.forName(driverName);
-			con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Cannot find this driver name!");
-		} catch (SQLException e) {
-			System.out.println("Connection Failure!");
-		}
-		return con;
+		_con = RepositoryConnector.createConnection();
 	}
 	
 	public boolean register(User user) {
