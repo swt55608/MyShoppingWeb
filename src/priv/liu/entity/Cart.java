@@ -2,6 +2,7 @@ package priv.liu.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,17 @@ public class Cart {
 	
 	public Map<String, Integer> getProductQuantities() {
 		return _productQuantities;
+	}
+	
+	public void removeProduct(String productName) {
+		// TODO: remove data from _products and _productQuantities
+		for (Product product : _products) {
+			if (product.getName().equals(productName)) { 
+				_products.remove(product);
+				break;
+			}
+		}
+		_productQuantities.remove(productName);
 	}
 	
 }

@@ -25,6 +25,7 @@ public class ProductServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		Cart cart;
+		String productName;
 		switch (action) {
 		case "getProducts":
 			List<Product> products = getProducts();
@@ -37,7 +38,7 @@ public class ProductServlet extends HttpServlet {
 			
 			
 			
-		// TODO: get the cart, add/delete the product into the cart
+		
 		case "getCart":
 			cart = getCart(session);
 			session.setAttribute("productsInCart", cart.getProducts());
@@ -45,13 +46,22 @@ public class ProductServlet extends HttpServlet {
 			break;
 		case "addToCart":
 			String img = request.getParameter("img");
-			String name = request.getParameter("name");
-			Product product = new Product(img, name);
+			productName = request.getParameter("name");
+			Product product = new Product(img, productName);
 			cart = getCart(session);
 			cart.add(product);
 			session.setAttribute("cart", cart);
 			session.setAttribute("productQuantities", cart.getProductQuantities());
 			request.getRequestDispatcher("testproductview.jsp").forward(request, response);
+			break;
+			// TODO: remove the product from the cart
+		case "removeFromCart":
+			productName = request.getParameter("name");
+			cart = getCart(session);
+			cart.removeProduct(productName);
+			session.setAttribute("cart", cart);
+			session.setAttribute("productQuantities", cart.getProductQuantities());
+			request.getRequestDispatcher("testcartview.jsp").forward(request, response);
 			break;
 			
 			
