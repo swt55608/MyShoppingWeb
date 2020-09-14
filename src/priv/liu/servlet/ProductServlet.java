@@ -43,6 +43,15 @@ public class ProductServlet extends HttpServlet {
 			session.setAttribute("productsInCart", cart.getProducts());
 			request.getRequestDispatcher("testcartview.jsp").forward(request, response);
 			break;
+		case "addToCart":
+			String img = request.getParameter("img");
+			String name = request.getParameter("name");
+			Product product = new Product(img, name);
+			cart = getCart(session);
+			cart.add(product);
+			session.setAttribute("cart", cart);
+			request.getRequestDispatcher("testproductview.jsp").forward(request, response);
+			break;
 			
 			
 			
