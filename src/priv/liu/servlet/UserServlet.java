@@ -1,6 +1,8 @@
 package priv.liu.servlet;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,23 +29,33 @@ public class UserServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
+		System.out.println("username: " + username + ", password: " + password);
+		
+		HttpSession session = request.getSession();
 		if (username.isEmpty() || username == null || password.isEmpty() || password == null) {
 			System.out.println("There're should NOT be empty in your username or password.");
 		} else {
 			User user = new User(username, password);
+			boolean isSuccussful = false;
 			switch (action) {
 			case "register":
-				String isRegisterSuccussful = register(user) ? "Successful" : "Failed";
-				System.out.println(isRegisterSuccussful + " registration");			
+				isSuccussful = register(user);
+				System.out.println(isSuccussful + " registration");			
 				break;
 			case "login":
-				String isLoginSuccussful = login(user) ? "Successful" : "Failed";
-				System.out.println(isLoginSuccussful + " login");
+				isSuccussful = login(user);
+				System.out.println(isSuccussful + " login");
 				break;
 			default:
 				System.out.println("Undefined Action.");
 				break;
 			}
+			
+			if (isSuccussful) {
+				session.setAttribute("username", user.getUsername());
+//				request.getRequestDispatcher("testview.jsp").forward(request, response);
+			}
+				
 		}
 	}
 	
