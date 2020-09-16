@@ -54,7 +54,6 @@ public class ProductServlet extends HttpServlet {
 			session.setAttribute("productQuantities", cart.getProductQuantities());
 			request.getRequestDispatcher("testproductview.jsp").forward(request, response);
 			break;
-			// TODO: remove the product from the cart
 		case "removeFromCart":
 			productName = request.getParameter("name");
 			cart = getCart(session);

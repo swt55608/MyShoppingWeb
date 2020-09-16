@@ -43,7 +43,6 @@ public class Cart {
 	}
 	
 	public void removeProduct(String productName) {
-		// TODO: remove data from _products and _productQuantities
 		for (Product product : _products) {
 			if (product.getName().equals(productName)) { 
 				_products.remove(product);
