@@ -5,16 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
+	String _dbUser = "root";
+	String _dbPassword = "test1234";
 	
-	public static Connection createConnection() {
+	public Connection createConnection(String driverName, String dbUrl) {
 		Connection con = null;
-		String driverName = "com.mysql.jdbc.Driver";
-		String dbUrl = "jdbc:mysql://localhost/myshoppingweb?serverTimezone=UTC";
-		String dbUser = "root";
-		String dbPassword = "test1234";
 		try {
 			Class.forName(driverName);
-			con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+			con = DriverManager.getConnection(dbUrl, _dbUser, _dbPassword);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Cannot find this driver name!");
 		} catch (SQLException e) {

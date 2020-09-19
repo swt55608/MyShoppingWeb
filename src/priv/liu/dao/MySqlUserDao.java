@@ -13,7 +13,9 @@ public class MySqlUserDao extends UserDao {
 	private Connection _con;
 	
 	public MySqlUserDao() {
-		_con = DatabaseConnector.createConnection();
+		String driverName = "com.mysql.jdbc.Driver";
+		String dbUrl = "jdbc:mysql://localhost/myshoppingweb?serverTimezone=UTC";
+		_con = new DatabaseConnector().createConnection(driverName, dbUrl);
 	}
 	
 	@Override
