@@ -1,10 +1,10 @@
-package priv.liu.repository;
+package priv.liu.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class RepositoryConnector {
+public class DatabaseConnector {
 	
 	public static Connection createConnection() {
 		Connection con = null;

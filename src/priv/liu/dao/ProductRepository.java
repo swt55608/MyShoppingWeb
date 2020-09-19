@@ -1,4 +1,4 @@
-package priv.liu.repository;
+package priv.liu.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,7 +14,7 @@ public class ProductRepository {
 	private Connection _con;
 	
 	public ProductRepository() {
-		_con = RepositoryConnector.createConnection();
+		_con = DatabaseConnector.createConnection();
 	}
 	
 	public List<Product> getProducts() {
