@@ -10,82 +10,65 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import priv.liu.dao.MySqlUserDao;
 import priv.liu.entity.User;
-import priv.liu.repository.UserRepository;
+import priv.liu.exception.NoSuchActionException;
+import priv.liu.usecase.UserUseCase;
 
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private UserRepository _userRepository;
-	private boolean _isUserLogin;
+	private UserUseCase _userUseCase;
 
 	public UserServlet() {
 		super();
-		_userRepository = new UserRepository();
-		_isUserLogin = false;
+		_userUseCase = new UserUseCase();
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		logout(session);
-		System.out.println(!_isUserLogin + " logout");
-		
-		request.getRequestDispatcher("testview.jsp").forward(request, response);
+	// TODO: this is for mock testing
+	public UserServlet(UserUseCase userUseCase) {
+		super();
+		_userUseCase = userUseCase;
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
+		switch(action) {
+		case "register":
+			register(request, response);
+			break;
+		case "login":
+			login(request, response);
+			break;
+		case "logout":
+			logout(request, response);
+			break;
+		default:
+//			throw new NoSuchActionException();
+		}
+	}
+	
+	private void register(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
-		System.out.println("username: " + username + ", password: " + password);
-		
+		String value = (_userUseCase.register(username, password)) ? username : null;
+		session.setAttribute("username", value);
+	}
+	
+	private void login(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
-		if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-			System.out.println("There're should NOT be empty in your username or password.");
-		} else {
-			User user = new User(username, password);
-			switch (action) {
-			case "register":
-				register(user, session);
-				System.out.println(_isUserLogin + " registration");			
-				break;
-			case "login":
-				login(user, session);
-				System.out.println(_isUserLogin + " login");
-				break;
-			default:
-				System.out.println("Undefined Action.");
-				break;
-			}
-		}
-		request.getRequestDispatcher("testview.jsp").forward(request, response);
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String value = (_userUseCase.login(username, password)) ? username : null;
+		session.setAttribute("username", value);
 	}
 	
-	private boolean register(User user, HttpSession session) {
-		if (_userRepository.register(user)) {
-			session.setAttribute("username", user.getUsername());
-			_isUserLogin = true;
-		}
-		return _isUserLogin;
-	}
-	
-	private boolean login(User user, HttpSession session) {
-		if (_userRepository.login(user)) {
-			session.setAttribute("username", user.getUsername());
-			_isUserLogin = true;
-		}
-		return _isUserLogin;
-	}
-	
-	private boolean logout(HttpSession session) {
-		if (_isUserLogin) {
-			session.removeAttribute("username");
-			session.invalidate();
-			_isUserLogin = false;
-		}
-		return !_isUserLogin;
+	private void logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		session.removeAttribute("username");
+		session.invalidate();
 	}
 
 }
