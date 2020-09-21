@@ -9,11 +9,11 @@ import java.util.List;
 
 import priv.liu.entity.Product;
 
-public class ProductRepository {
+public class MySqlProductDao extends ProductDao {
 	
 	private Connection _con;
 	
-	public ProductRepository() {
+	public MySqlProductDao() {
 		_con = DatabaseConnector.createConnection();
 	}
 	
