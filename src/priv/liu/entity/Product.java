@@ -1,21 +1,13 @@
 package priv.liu.entity;
 
 public class Product {
-	private String _img;
 	private String _name;
+	private int _price;
 	
-	public Product(String img, String name) {
+	public Product(String name, int price) {
 		super();
-		setImg(img);
 		setName(name);
-	}
-
-	public String getImg() {
-		return _img;
-	}
-
-	public void setImg(String img) {
-		this._img = img;
+		setPrice(price);
 	}
 
 	public String getName() {
@@ -24,5 +16,13 @@ public class Product {
 
 	public void setName(String name) {
 		this._name = name;
+	}
+	
+	public int getPrice() {
+		return _price;
+	}
+	
+	public void setPrice(int price) {
+		this._price = price;
 	}
 }

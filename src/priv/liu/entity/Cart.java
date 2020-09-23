@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import priv.liu.exception.ProductNotExistException;
+
 public class Cart {
 	private List<Product> _products;
 	private Map<String, Integer> _productQuantities;
@@ -42,14 +44,22 @@ public class Cart {
 		return _productQuantities;
 	}
 	
-	public void removeProduct(String productName) {
+	public void remove(String productName) throws ProductNotExistException {
+		boolean wasProductExist = false;
 		for (Product product : _products) {
 			if (product.getName().equals(productName)) { 
 				_products.remove(product);
+				_productQuantities.remove(productName);
+				wasProductExist = true;
 				break;
 			}
 		}
-		_productQuantities.remove(productName);
+		if (!wasProductExist)
+			throw new ProductNotExistException();
+	}
+	
+	public int size() {
+		return _products.size();
 	}
 	
 }
