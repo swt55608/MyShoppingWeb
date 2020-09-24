@@ -6,6 +6,7 @@ import priv.liu.dao.ProductDao;
 import priv.liu.entity.Cart;
 import priv.liu.entity.Product;
 import priv.liu.exception.ProductNotExistException;
+import priv.liu.factory.ProductDaoFactory;
 
 public class CustomerUseCase {
 	private ProductDao _productDao;
