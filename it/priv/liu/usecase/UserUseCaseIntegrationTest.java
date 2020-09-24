@@ -27,7 +27,7 @@ public class UserUseCaseIntegrationTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		_userDao = new UserDaoFactory().createUserDao();
+		_userDao = new UserDaoFactory().create();
 		_userUseCase = new UserUseCase(_userDao);
 		_toDeleteUsers = new ArrayList<User>();
 	}

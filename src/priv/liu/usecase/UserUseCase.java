@@ -8,7 +8,7 @@ public class UserUseCase {
 	private UserDao _userDao;
 
 	public UserUseCase() {
-		_userDao = new UserDaoFactory().createUserDao();
+		_userDao = new UserDaoFactory().create();
 	}
 	
 	// TODO: this is for testing

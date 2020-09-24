@@ -46,7 +46,7 @@ public class UserServletIntegrationTest {
 //		_userUseCase = mock(UserUseCase.class);
 //		_userServlet = new UserServlet(_userUseCase);
 		_userServlet = new UserServlet();
-		_userDao = new UserDaoFactory().createUserDao();
+		_userDao = new UserDaoFactory().create();
 		_toDeleteUsers = new ArrayList<User>();
 		
 		_request = mock(HttpServletRequest.class);

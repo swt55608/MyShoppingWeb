@@ -5,7 +5,7 @@ import priv.liu.dao.MySqlUserDao;
 import priv.liu.dao.UserDao;
 
 public class UserDaoFactory {
-	public UserDao createUserDao() {
+	public UserDao create() {
 		UserDao userDao;
 		switch(Config.daoCategory) {
 		default:
