@@ -11,7 +11,6 @@ public class UserUseCase {
 		_userDao = new UserDaoFactory().create();
 	}
 	
-	// TODO: this is for testing
 	public UserUseCase(UserDao userDao) {
 		_userDao = userDao;
 	}

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import priv.liu.dao.MySqlUserDao;
 import priv.liu.entity.User;
-import priv.liu.exception.NoSuchActionException;
 import priv.liu.usecase.UserUseCase;
 
 @WebServlet("/UserServlet")
@@ -26,7 +25,6 @@ public class UserServlet extends HttpServlet {
 		_userUseCase = new UserUseCase();
 	}
 	
-	// TODO: this is for mock testing
 	public UserServlet(UserUseCase userUseCase) {
 		super();
 		_userUseCase = userUseCase;
