@@ -2,6 +2,7 @@ package priv.liu.servlet;
 
 import static org.junit.Assert.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import priv.liu.FunctionIgnore;
 import priv.liu.dao.MySqlUserDao;
 import priv.liu.usecase.UserUseCase;
 
@@ -40,6 +42,9 @@ public class UserServletTest {
 		_userServlet = new UserServlet(_userUseCase);
 		_request = mock(HttpServletRequest.class);
 		_response = mock(HttpServletResponse.class);
+		
+		FunctionIgnore.ignoreRequestDispatcherForward(_request);
+		
 		_session = mock(HttpSession.class);
 		_sessionAttributes = new HashMap<String, Object>();
 		
