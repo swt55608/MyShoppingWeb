@@ -14,7 +14,9 @@ public class MySqlProductDao extends ProductDao {
 	private Connection _con;
 	
 	public MySqlProductDao() {
-		_con = DatabaseConnector.createConnection();
+		String driverName = "com.mysql.jdbc.Driver";
+		String dbUrl = "jdbc:mysql://localhost/myshoppingweb?serverTimezone=UTC";
+		_con = new DatabaseConnector().createConnection(driverName, dbUrl);
 	}
 	
 	public List<Product> getProducts() {
@@ -24,11 +26,12 @@ public class MySqlProductDao extends ProductDao {
 			Statement stmt = _con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			Product product;
-			String img, name;
+			String name;
+			int price;
 			while (rs.next()) {
-				img = rs.getString("img");
 				name = rs.getString("name");
-				product = new Product(img, name);
+				price = Integer.parseInt(rs.getString("price"));
+				product = new Product(name, price);
 				products.add(product);
 			}
 		} catch (SQLException e) {
