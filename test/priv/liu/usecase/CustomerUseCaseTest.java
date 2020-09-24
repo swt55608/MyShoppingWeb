@@ -32,8 +32,6 @@ public class CustomerUseCaseTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
-	
 
 	@Test
 	public void viewAllKindsProductsInStock_Success() {

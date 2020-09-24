@@ -35,7 +35,6 @@ public class CustomerServletTest {
 	private HttpServletResponse _response;
 	private	Cart _cart;
 	private HttpSession _session;
-	
 
 	@Before
 	public void setUp() throws Exception {
@@ -192,7 +191,7 @@ public class CustomerServletTest {
 			}
 		}).when(session).setAttribute(anyString(), any());
 	}
-	
+
 	private void defineUseCaseRemoveFromCart() throws ProductNotExistException {
 		doAnswer(new Answer<Object>() {
 			@Override
