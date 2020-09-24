@@ -33,8 +33,8 @@ public class CustomerServletTest {
 	private CustomerUseCase _customerUseCase;
 	private HttpServletRequest _request;
 	private HttpServletResponse _response;
-	private ServletContext _ctx;
-	private Map<String, Object> _ctxAttributes;
+	private	Cart _cart;
+	private HttpSession _session;
 	
 
 	@Before
@@ -44,18 +44,11 @@ public class CustomerServletTest {
 		_request = mock(HttpServletRequest.class);
 		_response = mock(HttpServletResponse.class);
 		
-		_ctxAttributes = new HashMap<String, Object>();
-		_ctx = mock(ServletContext.class);
-		doReturn(_ctx).when(_request).getServletContext();
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				String key = (String) invocation.getArguments()[0];
-				Object value = invocation.getArguments()[1];
-				_ctxAttributes.put(key, value);
-				return null;
-			}
-		}).when(_ctx).setAttribute(anyString(), any());
+		// setup cart from session
+		_cart = new Cart();
+		_session = mock(HttpSession.class);
+		doReturn(_session).when(_request).getSession();
+		doReturn(_cart).when(_session).getAttribute("cart");
 	}
 
 	@After
@@ -64,6 +57,10 @@ public class CustomerServletTest {
 
 	@Test
 	public void viewProductsInStock_Success() throws ServletException, IOException {
+		ServletContext ctx = mock(ServletContext.class);
+		Map<String, Object> ctxAttributes = new HashMap<String, Object>();
+		defineServletContextSetAttribute(ctx, ctxAttributes);
+		
 		doReturn("viewProducts").when(_request).getParameter("action");
 		
 		Product apple = new Product("apple", 10);
@@ -79,57 +76,57 @@ public class CustomerServletTest {
 		doReturn(actualProducts).when(_customerUseCase).viewProductsInStock();
 		
 		_customerServlet.doGet(_request, _response);
-		ProductAsserter.assertProductsEqual(expectedProducts, (List<Product>)_ctxAttributes.get("products"));
+		ProductAsserter.assertProductsEqual(expectedProducts, (List<Product>) ctxAttributes.get("products"));
+	}
+
+	private void defineServletContextSetAttribute(ServletContext ctx, Map<String, Object> ctxAttributes) {
+		doReturn(ctx).when(_request).getServletContext();
+		doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				String key = (String) invocation.getArguments()[0];
+				Object value = invocation.getArguments()[1];
+				ctxAttributes.put(key, value);
+				return null;
+			}
+		}).when(ctx).setAttribute(anyString(), any());
 	}
 	
-	// TODO: refactor those testFunct below
+	// TODO: refactor those testFunct below 
+	// (Should extract which methods to setUp()?)
+	// (Should make viewProductsInStock() a member of SupplierServlet and SupplierUseCase? (which are not created))
 	@Test
 	public void addAProductToCart_Success() throws ServletException, IOException {
-		doReturn("addToCart").when(_request).getParameter("action");
-		
-		// setup cart from session
-		Cart cart = new Cart();
-		HttpSession session = mock(HttpSession.class);
-		doReturn(session).when(_request).getSession();
-		doReturn(cart).when(session).getAttribute("cart");
-		
 		// set request param {pName, pPrice}
 		doReturn("apple").when(_request).getParameter("pName");
 		doReturn("10").when(_request).getParameter("pPrice");
 		
-		// define use case addToCart
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Product invProduct = (Product) invocation.getArguments()[0];
-				Cart invCart = (Cart) invocation.getArguments()[1];
-				invCart.add(invProduct);
-				return null;
-			}
-		}).when(_customerUseCase).addToCart(any(), any());
-		
+		doReturn("addToCart").when(_request).getParameter("action");
+		defineUseCaseAddToCart();
 		_customerServlet.doGet(_request, _response);
 		
 		List<Product> expected = new ArrayList<Product>();
 		expected.add(new Product("apple", 10));
-		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
+		ProductAsserter.assertProductsEqual(expected, _cart.getProducts());
 	}
 
 	@Test
 	public void addDuplicativeProductsToCart_Fail() throws ServletException, IOException {
-		doReturn("addToCart").when(_request).getParameter("action");
-		
-		// setup cart from session
-		Cart cart = new Cart();
-		HttpSession session = mock(HttpSession.class);
-		doReturn(session).when(_request).getSession();
-		doReturn(cart).when(session).getAttribute("cart");
-		
 		// set request param {pName, pPrice}
 		doReturn("apple").when(_request).getParameter("pName");
 		doReturn("10").when(_request).getParameter("pPrice");
 		
-		// define use case addToCart
+		doReturn("addToCart").when(_request).getParameter("action");
+		defineUseCaseAddToCart();
+		_customerServlet.doGet(_request, _response);
+		_customerServlet.doGet(_request, _response);
+		
+		List<Product> expected = new ArrayList<Product>();
+		expected.add(new Product("apple", 10));
+		ProductAsserter.assertProductsEqual(expected, _cart.getProducts());
+	}
+	
+	private void defineUseCaseAddToCart() {
 		doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -139,97 +136,52 @@ public class CustomerServletTest {
 				return null;
 			}
 		}).when(_customerUseCase).addToCart(any(), any());
-		
-		_customerServlet.doGet(_request, _response);
-		_customerServlet.doGet(_request, _response);
-		
-		List<Product> expected = new ArrayList<Product>();
-		expected.add(new Product("apple", 10));
-		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
 	}
 	
 	@Test
 	public void removeProductFromCart_Success() throws ProductNotExistException, ServletException, IOException {
-		doReturn("addToCart").when(_request).getParameter("action");
-
-		// setup cart from session
-		Cart cart = new Cart();
-		HttpSession session = mock(HttpSession.class);
-		doReturn(session).when(_request).getSession();
-		doReturn(cart).when(session).getAttribute("cart");
-		
 		// set request param {pName, pPrice}
 		doReturn("apple").when(_request).getParameter("pName");
 		doReturn("10").when(_request).getParameter("pPrice");
 		
-		// define use case addToCart
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Product invProduct = (Product) invocation.getArguments()[0];
-				Cart invCart = (Cart) invocation.getArguments()[1];
-				invCart.add(invProduct);
-				return null;
-			}
-		}).when(_customerUseCase).addToCart(any(), any());
-		
+		doReturn("addToCart").when(_request).getParameter("action");
+		defineUseCaseAddToCart();
 		_customerServlet.doGet(_request, _response);
 		
 		List<Product> expected = new ArrayList<Product>();
 		expected.add(new Product("apple", 10));
-		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
-		
-		
-		
-		
+		ProductAsserter.assertProductsEqual(expected, _cart.getProducts());
 		
 		doReturn("removeFromCart").when(_request).getParameter("action");
 		
-		// define use case removeFromCart
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Product invoProduct = (Product) invocation.getArguments()[0];
-				Cart invoCart = (Cart) invocation.getArguments()[1];
-				invoCart.remove(invoProduct.getName());
-				return null;
-			}
-		}).when(_customerUseCase).removeFromCart(any(), any());
-		
+		defineUseCaseRemoveFromCart();
 		_customerServlet.doGet(_request, _response);
 		
 		expected.clear();
-		assertTrue(cart.size() == 0);
-		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
+		assertTrue(_cart.size() == 0);
+		ProductAsserter.assertProductsEqual(expected, _cart.getProducts());
 	}
 	
 	@Test
 	public void removeNonExistProductFromCart_Fail() throws ServletException, IOException, ProductNotExistException {
-		doReturn("removeFromCart").when(_request).getParameter("action");
-		
-		// setup cart from session
-		Cart cart = new Cart();
-		HttpSession session = mock(HttpSession.class);
-		doReturn(session).when(_request).getSession();
-		doReturn(cart).when(session).getAttribute("cart");
-		
 		// set request param {pName, pPrice}
 		doReturn("apple").when(_request).getParameter("pName");
 		doReturn("10").when(_request).getParameter("pPrice");
 		
-		// define use case removeFromCart
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Product invoProduct = (Product) invocation.getArguments()[0];
-				Cart invoCart = (Cart) invocation.getArguments()[1];
-				invoCart.remove(invoProduct.getName());
-				return null;
-			}
-		}).when(_customerUseCase).removeFromCart(any(), any());
-		
-		// define session setAttribute
+		doReturn("removeFromCart").when(_request).getParameter("action");
 		Map<String, Object> sessionAttributes = new HashMap<String, Object>();
+		defineSessionSetAttribute(_session, sessionAttributes);
+		
+		defineUseCaseRemoveFromCart();
+		_customerServlet.doGet(_request, _response);
+		
+		List<Product> expected = new ArrayList<Product>();
+		assertTrue(_cart.size() == 0);
+		ProductAsserter.assertProductsEqual(expected, _cart.getProducts());
+		assertTrue(sessionAttributes.get("errMsg").equals("No Such Product Can Be Removed!!!"));
+	}
+
+	private void defineSessionSetAttribute(HttpSession session, Map<String, Object> sessionAttributes) {
 		doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -239,13 +191,17 @@ public class CustomerServletTest {
 				return null;
 			}
 		}).when(session).setAttribute(anyString(), any());
-		
-		_customerServlet.doGet(_request, _response);
-		
-		List<Product> expected = new ArrayList<Product>();
-		assertTrue(cart.size() == 0);
-		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
-		
-		assertTrue(sessionAttributes.get("errMsg").equals("No Such Product Can Be Removed!!!"));
+	}
+	
+	private void defineUseCaseRemoveFromCart() throws ProductNotExistException {
+		doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Product invoProduct = (Product) invocation.getArguments()[0];
+				Cart invoCart = (Cart) invocation.getArguments()[1];
+				invoCart.remove(invoProduct.getName());
+				return null;
+			}
+		}).when(_customerUseCase).removeFromCart(any(), any());
 	}
 }
