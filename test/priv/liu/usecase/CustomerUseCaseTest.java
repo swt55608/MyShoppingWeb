@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import priv.liu.ProductAsserter;
 import priv.liu.dao.MySqlProductDao;
 import priv.liu.dao.ProductDao;
 import priv.liu.entity.Cart;
@@ -32,22 +33,7 @@ public class CustomerUseCaseTest {
 	public void tearDown() throws Exception {
 	}
 	
-	private void assertProductsEqual(List<Product> expected, List<Product> actual) {
-		assertTrue(expected.size() == actual.size());
-		Product pInExepected, pInActual;
-		Iterator expectedIterator = expected.iterator();
-		Iterator actualIterator = actual.iterator();
-		while (expectedIterator.hasNext() && actualIterator.hasNext()) {
-			pInExepected = (Product) expectedIterator.next();
-			pInActual = (Product) actualIterator.next();
-			assertProductEqual(pInExepected, pInActual);
-		}
-	}
 	
-	private void assertProductEqual(Product expected, Product actual) {
-		assertTrue(expected.getName() == actual.getName());
-		assertTrue(expected.getPrice() == actual.getPrice());
-	}
 
 	@Test
 	public void viewAllKindsProductsInStock_Success() {
@@ -56,7 +42,7 @@ public class CustomerUseCaseTest {
 		expected.add(new Product("banana", 20));
 		doReturn(expected).when(_productDao).getProducts();
 		List<Product> actual = _customerUseCase.viewProductsInStock();
-		assertProductsEqual(expected, actual);
+		ProductAsserter.assertProductsEqual(expected, actual);
 	}
 	
 	@Test
@@ -67,7 +53,7 @@ public class CustomerUseCaseTest {
 		assertTrue(cart.size() == 1);
 		List<Product> expected = new ArrayList<Product>();
 		expected.add(product);
-		assertProductsEqual(expected, cart.getProducts());
+		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
 	}
 	
 	@Test
@@ -83,7 +69,7 @@ public class CustomerUseCaseTest {
 		assertTrue(cart.size() == 1);
 		List<Product> expected = new ArrayList<Product>();
 		expected.add(product);
-		assertProductsEqual(expected, cart.getProducts());
+		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
 	}
 
 	@Test
@@ -98,7 +84,7 @@ public class CustomerUseCaseTest {
 		assertTrue(cart.size() == 1);
 		List<Product> expected = new ArrayList<Product>();
 		expected.add(banana);
-		assertProductsEqual(expected, cart.getProducts());
+		ProductAsserter.assertProductsEqual(expected, cart.getProducts());
 	}
 	
 	@Test(expected = ProductNotExistException.class)
