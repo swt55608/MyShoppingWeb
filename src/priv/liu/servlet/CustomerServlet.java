@@ -24,7 +24,7 @@ public class CustomerServlet extends HttpServlet {
 	
     public CustomerServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        _customerUseCase = new CustomerUseCase();
     }
     
     public CustomerServlet(CustomerUseCase customerUseCase) {
