@@ -29,6 +29,11 @@ public class UserServlet extends HttpServlet {
 		super();
 		_userUseCase = userUseCase;
 	}
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
@@ -47,26 +52,33 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 	
-	private void register(HttpServletRequest request, HttpServletResponse response) {
+	private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String value = (_userUseCase.register(username, password)) ? username : null;
-		session.setAttribute("username", value);
+		boolean isRegister = _userUseCase.register(username, password);
+		username = (isRegister) ? username : null;
+		String page = (isRegister) ? "index.jsp" : "register.jsp";
+		session.setAttribute("username", username);
+		request.getRequestDispatcher(page).forward(request, response);
 	}
 	
-	private void login(HttpServletRequest request, HttpServletResponse response) {
+	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String value = (_userUseCase.login(username, password)) ? username : null;
-		session.setAttribute("username", value);
+		boolean isLogin = _userUseCase.login(username, password);
+		username = (isLogin) ? username : null;
+		String page = (isLogin) ? "index.jsp" : "login.jsp";
+		session.setAttribute("username", username);
+		request.getRequestDispatcher(page).forward(request, response);
 	}
 	
-	private void logout(HttpServletRequest request, HttpServletResponse response) {
+	private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		session.removeAttribute("username");
 		session.invalidate();
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
 }
