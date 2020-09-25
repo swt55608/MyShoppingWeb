@@ -13,8 +13,8 @@
 	</style>
 </head>
 <body>
-	<h1>商品</h1>
-	<a href="cart.jsp">購物車</a>
+<!-- 	<h1>商品</h1> -->
+<!-- 	<a href="cart.jsp">購物車</a> -->
 	<table>
 		<tr>
 			<th>名稱</th>
@@ -24,7 +24,9 @@
 			<tr>
 				<td>${product.name}</td>
 				<td>${product.price}</td>
-				<td><a href="CustomerServlet?action=addToCart&pName=${product.name}&pPrice=${product.price}">加到購物車</a></td>
+				<c:if test="${!empty sessionScope.username}">
+					<td><a href="CustomerServlet?action=addToCart&pName=${product.name}&pPrice=${product.price}">加到購物車</a></td>
+				</c:if>
 			</tr>
 		</c:forEach>
 	</table>
