@@ -21,26 +21,14 @@ import priv.liu.exception.ProductNotExistException;
 public class CustomerUseCaseTest {
 	
 	private CustomerUseCase _customerUseCase;
-	private ProductDao _productDao;
 
 	@Before
 	public void setUp() throws Exception {
-		_productDao = mock(MySqlProductDao.class);
-		_customerUseCase = new CustomerUseCase(_productDao);
+		_customerUseCase = new CustomerUseCase();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void viewAllKindsProductsInStock_Success() {
-		List<Product> expected = new ArrayList<Product>();
-		expected.add(new Product("apple", 10));
-		expected.add(new Product("banana", 20));
-		doReturn(expected).when(_productDao).getProducts();
-		List<Product> actual = _customerUseCase.viewProductsInStock();
-		ProductAsserter.assertProductsEqual(expected, actual);
 	}
 	
 	@Test

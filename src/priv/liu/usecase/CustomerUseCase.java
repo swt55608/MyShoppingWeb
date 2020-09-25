@@ -9,19 +9,6 @@ import priv.liu.exception.ProductNotExistException;
 import priv.liu.factory.ProductDaoFactory;
 
 public class CustomerUseCase {
-	private ProductDao _productDao;
-	
-	public CustomerUseCase() {
-		_productDao = new ProductDaoFactory().create();
-	}
-	
-	public CustomerUseCase(ProductDao productDao) {
-		_productDao = productDao;
-	}
-	
-	public List<Product> viewProductsInStock() {
-		return _productDao.getProducts();
-	}
 	
 	public void addToCart(Product product, Cart cart) {
 		cart.add(product);

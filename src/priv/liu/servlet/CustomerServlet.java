@@ -37,9 +37,6 @@ public class CustomerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
 		switch(action) {
-		case "viewProducts":
-			viewProductsInStock(request, response);
-			break;
 		case "addToCart":
 			addProductToCart(request, response);
 			break;
@@ -51,13 +48,6 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 	
-	private void viewProductsInStock(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Product> products = _customerUseCase.viewProductsInStock();
-		ServletContext ctx = request.getServletContext();
-		ctx.setAttribute("products", products);
-		response.sendRedirect("products.jsp");
-	}
-	
 	private void addProductToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Cart cart = getCart(request);
 		
@@ -66,7 +56,7 @@ public class CustomerServlet extends HttpServlet {
 		Product product = new Product(pName, pPrice);
 		
 		_customerUseCase.addToCart(product, cart);
-		response.sendRedirect("products.jsp");
+		response.sendRedirect("index.jsp");
 	}
 	
 	private Cart getCart(HttpServletRequest request) {

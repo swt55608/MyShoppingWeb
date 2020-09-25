@@ -53,47 +53,9 @@ public class CustomerServletTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void viewProductsInStock_Success() throws ServletException, IOException {
-		ServletContext ctx = mock(ServletContext.class);
-		Map<String, Object> ctxAttributes = new HashMap<String, Object>();
-		defineServletContextSetAttribute(ctx, ctxAttributes);
-		
-		doReturn("viewProducts").when(_request).getParameter("action");
-		
-		Product apple = new Product("apple", 10);
-		Product banana = new Product("banana", 20);
-		
-		List<Product> expectedProducts = new ArrayList<Product>();
-		expectedProducts.add(apple);
-		expectedProducts.add(banana);
-		
-		List<Product> actualProducts = new ArrayList<Product>();
-		actualProducts.add(apple);
-		actualProducts.add(banana);
-		doReturn(actualProducts).when(_customerUseCase).viewProductsInStock();
-		
-		_customerServlet.doGet(_request, _response);
-		ProductAsserter.assertProductsEqual(expectedProducts, (List<Product>) ctxAttributes.get("products"));
-	}
-
-	private void defineServletContextSetAttribute(ServletContext ctx, Map<String, Object> ctxAttributes) {
-		doReturn(ctx).when(_request).getServletContext();
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				String key = (String) invocation.getArguments()[0];
-				Object value = invocation.getArguments()[1];
-				ctxAttributes.put(key, value);
-				return null;
-			}
-		}).when(ctx).setAttribute(anyString(), any());
-	}
 	
 	// TODO: refactor those testFunct below 
 	// (Should extract which methods to setUp()?)
-	// (Should make viewProductsInStock() a member of SupplierServlet and SupplierUseCase? (which are not created))
 	@Test
 	public void addAProductToCart_Success() throws ServletException, IOException {
 		// set request param {pName, pPrice}
