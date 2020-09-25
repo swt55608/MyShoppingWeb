@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.omg.stub.java.rmi._Remote_Stub;
+
 import priv.liu.entity.Cart;
 import priv.liu.entity.Product;
 import priv.liu.exception.ProductNotExistException;
@@ -49,35 +51,46 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 	
-	private void viewProductsInStock(HttpServletRequest request, HttpServletResponse response) {
+	private void viewProductsInStock(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Product> products = _customerUseCase.viewProductsInStock();
 		ServletContext ctx = request.getServletContext();
 		ctx.setAttribute("products", products);
+		response.sendRedirect("products.jsp");
 	}
 	
-	private void addProductToCart(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession();
-		Cart cart = (Cart) session.getAttribute("cart");
+	private void addProductToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Cart cart = getCart(request);
 		
 		String pName = request.getParameter("pName");
 		int pPrice = Integer.parseInt(request.getParameter("pPrice"));
 		Product product = new Product(pName, pPrice);
 		
 		_customerUseCase.addToCart(product, cart);
+		response.sendRedirect("products.jsp");
 	}
 	
-	private void removeProductFromCart(HttpServletRequest request, HttpServletResponse response) {
+	private Cart getCart(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Cart cart = (Cart) session.getAttribute("cart");
+		if (cart == null) {
+			cart = new Cart();
+			session.setAttribute("cart", cart);
+		}
+		return cart;
+	}
+	
+	private void removeProductFromCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Cart cart = getCart(request);
 		
 		String pName = request.getParameter("pName");
 		int pPrice = Integer.parseInt(request.getParameter("pPrice"));
 		Product product = new Product(pName, pPrice);
 		
 		try {
-			_customerUseCase.removeFromCart(product, cart);	
+			_customerUseCase.removeFromCart(product, cart);
+			response.sendRedirect("cart.jsp");
 		} catch(ProductNotExistException e) {
-			session.setAttribute("errMsg", e.getMessage());
+			request.getSession().setAttribute("errMsg", e.getMessage());
 		}
 	}
 }

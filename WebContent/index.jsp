@@ -15,7 +15,9 @@
 	</c:if>
 	
 	<c:if test="${sessionScope.username != null}">
-		<a>購物車</a> | <a href="UserServlet?action=logout">登出</a>
+		<a href="CustomerServlet?action=viewProducts">商品清單</a> | 
+		<a href="cart.jsp">購物車</a> | 
+		<a href="UserServlet?action=logout">登出</a>
 	</c:if>
 </body>
 </html>
