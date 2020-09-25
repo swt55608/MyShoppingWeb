@@ -60,7 +60,7 @@ public class UserServlet extends HttpServlet {
 		username = (isRegister) ? username : null;
 		String page = (isRegister) ? "index.jsp" : "register.jsp";
 		session.setAttribute("username", username);
-		request.getRequestDispatcher(page).forward(request, response);
+		response.sendRedirect(page);
 	}
 	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,14 +71,14 @@ public class UserServlet extends HttpServlet {
 		username = (isLogin) ? username : null;
 		String page = (isLogin) ? "index.jsp" : "login.jsp";
 		session.setAttribute("username", username);
-		request.getRequestDispatcher(page).forward(request, response);
+		response.sendRedirect(page);
 	}
 	
 	private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		session.removeAttribute("username");
 		session.invalidate();
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+		response.sendRedirect("index.jsp");
 	}
 
 }
