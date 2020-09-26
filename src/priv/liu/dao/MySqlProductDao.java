@@ -28,10 +28,12 @@ public class MySqlProductDao extends ProductDao {
 			Product product;
 			String name;
 			int price;
+			String img;
 			while (rs.next()) {
 				name = rs.getString("name");
 				price = Integer.parseInt(rs.getString("price"));
-				product = new Product(name, price);
+				img = rs.getString("img");
+				product = new Product(name, price, img);
 				products.add(product);
 			}
 		} catch (SQLException e) {
