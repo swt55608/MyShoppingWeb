@@ -60,6 +60,7 @@ public class UserServlet extends HttpServlet {
 		username = (isRegister) ? username : null;
 		String page = (isRegister) ? "index.jsp" : "register.jsp";
 		session.setAttribute("username", username);
+		session.setAttribute("errMsg", "Username already registered. Please use other username!");
 		response.sendRedirect(page);
 	}
 	
@@ -71,6 +72,7 @@ public class UserServlet extends HttpServlet {
 		username = (isLogin) ? username : null;
 		String page = (isLogin) ? "index.jsp" : "login.jsp";
 		session.setAttribute("username", username);
+		session.setAttribute("errMsg", "Invalid Username or Password");
 		response.sendRedirect(page);
 	}
 	
