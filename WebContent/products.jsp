@@ -5,30 +5,26 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
-	<style>
-	table, tr, th, td {
-		border: 1px solid black;
-	}
-	</style>
+	<title>商品</title>
 </head>
 <body>
-<!-- 	<h1>商品</h1> -->
-<!-- 	<a href="cart.jsp">購物車</a> -->
-	<table>
-		<tr>
-			<th>名稱</th>
-			<th>價格</th>
-		</tr>
+	<div class="container">
 		<c:forEach items="${applicationScope.products}" var="product">
-			<tr>
-				<td>${product.name}</td>
-				<td>${product.price}</td>
-				<c:if test="${!empty sessionScope.username}">
-					<td><a href="CustomerServlet?action=addToCart&pName=${product.name}&pPrice=${product.price}">加到購物車</a></td>
-				</c:if>
-			</tr>
+			<div class="col-lg-4">
+				<div class="panel panel-primary">
+					<div class="panel-body"><img src="resources/productsImg/${product.img}" class="img-responsive" style="width: 100%;" alt="Image"></div>
+					<div class="panel-footer" style="text-align: center;"><div>${product.name}</div><div>\$${product.price}</div></div>
+					<a href="CustomerServlet?action=addToCart&pName=${product.name}&pPrice=${product.price}&pImg=${product.img}">
+						<c:if test="${empty sessionScope.username}">
+							<button class="addToCart btn btn-primary btn-block glyphicon glyphicon-shopping-cart" disabled>加到購物車</button>
+						</c:if>
+						<c:if test="${!empty sessionScope.username}">
+							<button class="addToCart btn btn-primary btn-block glyphicon glyphicon-shopping-cart">加到購物車</button>
+						</c:if>
+					</a>
+				</div>
+			</div>
 		</c:forEach>
-	</table>
+	</div>
 </body>
 </html>
