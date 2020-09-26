@@ -20,19 +20,19 @@
 	<%@ include file="resources/header.jsp" %>
 
 	<div class="container">
-		<h1>購物車</h1>
-		
 		<c:if test="${empty sessionScope.cart.products}">
 			<div>
-				<div>購物車內沒有東西!!</div>
+				<div style="width: 50%"><img src="resources/img/cart.png" class="img-responsive" style="width: 20%;" alt="Image"></div>
+				<div style="font-size: 20px;">購物車內沒有東西!!</div>
 			</div>
 		</c:if>
 		
 		<c:if test="${!empty sessionScope.cart.products}">
+			<h1>購物車</h1>
 			<table class="table table-hover">
 				<c:forEach items="${sessionScope.cart.products}" var="product">
 					<tr>
-						<td width="10%"><img src="resources/productsImg/${product.img}" class="img-responsive" style="width: 100%;" alt="Image"></td>
+						<td width="10%"><img src="resources/img/products/${product.img}" class="img-responsive" style="width: 100%;" alt="Image"></td>
 						<td style="font-size: 24px;"><div>${product.name}</div><div class="price">\$${product.price}</div></td>
 						<td style="font-size: 24px;">${sessionScope.cart.productQuantities[product.name]}</td>
 						<td><a class="btn btn-danger btn-lg glyphicon glyphicon-trash" href="CustomerServlet?action=removeFromCart&pName=${product.name}&pPrice=${product.price}"></a></td>

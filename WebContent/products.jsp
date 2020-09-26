@@ -12,7 +12,7 @@
 		<c:forEach items="${applicationScope.products}" var="product">
 			<div class="col-lg-4">
 				<div class="panel panel-primary">
-					<div class="panel-body"><img src="resources/productsImg/${product.img}" class="img-responsive" style="width: 100%;" alt="Image"></div>
+					<div class="panel-body"><img src="resources/img/products/${product.img}" class="img-responsive" style="width: 100%;" alt="Image"></div>
 					<div class="panel-footer" style="text-align: center;"><div>${product.name}</div><div>\$${product.price}</div></div>
 					<a href="CustomerServlet?action=addToCart&pName=${product.name}&pPrice=${product.price}&pImg=${product.img}">
 						<c:if test="${empty sessionScope.username}">
