@@ -53,7 +53,8 @@ public class CustomerServlet extends HttpServlet {
 		
 		String pName = request.getParameter("pName");
 		int pPrice = Integer.parseInt(request.getParameter("pPrice"));
-		Product product = new Product(pName, pPrice);
+		String img = request.getParameter("pImg");
+		Product product = new Product(pName, pPrice, img);
 		
 		_customerUseCase.addToCart(product, cart);
 		response.sendRedirect("index.jsp");
