@@ -4,13 +4,12 @@ import java.util.List;
 
 import priv.liu.dao.ProductDao;
 import priv.liu.entity.Product;
-import priv.liu.factory.ProductDaoFactory;
 
 public class SupplierUseCase {
 	private ProductDao _productDao;
 	
 	public SupplierUseCase() {
-		_productDao = new ProductDaoFactory().create();
+		_productDao = new ProductDao();
 	}
 	
 	public SupplierUseCase(ProductDao productDao) {

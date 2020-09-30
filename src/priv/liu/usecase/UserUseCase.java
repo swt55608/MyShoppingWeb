@@ -2,13 +2,12 @@ package priv.liu.usecase;
 
 import priv.liu.dao.UserDao;
 import priv.liu.entity.User;
-import priv.liu.factory.UserDaoFactory;
 
 public class UserUseCase {
 	private UserDao _userDao;
 
 	public UserUseCase() {
-		_userDao = new UserDaoFactory().create();
+		_userDao = new UserDao();
 	}
 	
 	public UserUseCase(UserDao userDao) {
