@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import priv.liu.dao.MySqlUserDao;
-import priv.liu.dao.UserDao;
+import priv.liu.dao.user.UserDao;
 import priv.liu.entity.User;
 import priv.liu.factory.UserDaoFactory;
 

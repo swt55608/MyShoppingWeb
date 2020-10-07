@@ -5,13 +5,16 @@ import priv.liu.Config;
 public class DatabaseConnectionStringFactory {
 	public DatabaseConnectionString create() {
 		DatabaseConnectionString connectionString;
-		switch(Config.databaseCategory.toLowerCase()) {
+		switch(Config.DATABASE_CATEGORY) {
 		default:
-		case "mysql":
+		case MYSQL:
 			connectionString = new MySqlConnectionString();
 			break;
-		case "postgresql":
+		case POSTGRESQL:
 			connectionString = new PostgreSqlConnectionString();
+			break;
+		case HSQL:
+			connectionString = new HSqlConnectionString();
 			break;
 		}
 		return connectionString;

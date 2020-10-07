@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import priv.liu.dao.user.UserDao;
 import priv.liu.entity.User;
 
 public class MySqlUserDaoTest {

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import priv.liu.ProductAsserter;
 import priv.liu.dao.MySqlProductDao;
-import priv.liu.dao.ProductDao;
+import priv.liu.dao.product.ProductDao;
 import priv.liu.entity.Product;
 
 public class SupplierUseCaseTest {

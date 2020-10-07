@@ -1,21 +1,22 @@
-package priv.liu.dao;
+package priv.liu.dao.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import priv.liu.dao.connector.DatabaseConnector;
+import priv.liu.dao.connector.DatabaseJdbcConnector;
 import priv.liu.entity.User;
 
-public class UserDao {
+public class JdbcUserDao extends UserDao {
 	
 	private Connection _con;
 	
-	public UserDao() {
-		_con = new DatabaseConnector().createConnection();
+	public JdbcUserDao() {
+		_con = new DatabaseJdbcConnector().createConnection();
 	}
 	
+	@Override
 	public boolean register(User user) {
 		int rowsUpdated = 0;
 		boolean isSuccussful = false;
@@ -35,6 +36,7 @@ public class UserDao {
 		return isSuccussful;
 	}
 	
+	@Override
 	public boolean login(User user) {
 		boolean isSuccessful = false;
 		try {
@@ -53,24 +55,28 @@ public class UserDao {
 		return isSuccessful;
 	}
 	
+	@Override
 	public boolean isUserExisting(User user) {
-		boolean ret = false;
+		boolean isExist = false;
 		try {
 			String sql = "SELECT * FROM users"
 					+ " WHERE username=?;";
 			PreparedStatement prestmt = _con.prepareStatement(sql);
 			prestmt.setString(1, user.getUsername());
 			ResultSet rs = prestmt.executeQuery();
-			ret = rs.next();
+			isExist = rs.next();
+			rs.close();
+			prestmt.close();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return ret;
+		return isExist;
 	}
 	
+	@Override
 	public boolean delete(User user) {
 		int rowsUpdated = 0;
-		boolean ret = false;
+		boolean isDeleted = false;
 		try {
 			String sql = "DELETE FROM users"
 					+ " WHERE username=? AND password=?;";
@@ -78,10 +84,10 @@ public class UserDao {
 			prestmt.setString(1, user.getUsername());
 			prestmt.setString(2, user.getPassword());
 			rowsUpdated = prestmt.executeUpdate();
-			ret = rowsUpdated == 1;
+			isDeleted = rowsUpdated == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return ret;
+		return isDeleted;
 	}
 }

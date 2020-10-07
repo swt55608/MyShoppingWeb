@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import priv.liu.dao.connector.string.DatabaseConnectionString;
 import priv.liu.dao.connector.string.DatabaseConnectionStringFactory;
 
-public class DatabaseConnector {
+public class DatabaseJdbcConnector {
 	
 	private DatabaseConnectionString _connectionString;
 	
-	public DatabaseConnector() {
+	public DatabaseJdbcConnector() {
 		_connectionString = new DatabaseConnectionStringFactory().create();
 	}
 	
