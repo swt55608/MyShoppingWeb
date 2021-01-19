@@ -1,5 +1,10 @@
 package priv.liu.usecase;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import priv.liu.dao.factory.UserDaoFactory;
 import priv.liu.dao.user.UserDao;
 import priv.liu.entity.User;
@@ -26,7 +31,7 @@ public class UserUseCase {
 		else if (isPasswordInvalid(password)) 
 			throw new InvalidPasswordException();
 		else
-			_userDao.register(new User(username, password));
+			_userDao.register(new User(username, convertToHashPassword(password)));
 	}
 
 	public boolean login(String username, String password) {
@@ -34,7 +39,7 @@ public class UserUseCase {
 		if (isNullOrEmpty(username) || isNullOrEmpty(password))
 			isLogin = false;
 		else
-			isLogin = _userDao.login(new User(username, password));
+			isLogin = _userDao.login(new User(username, convertToHashPassword(password)));
 		return isLogin;
 	}
 	
@@ -48,6 +53,23 @@ public class UserUseCase {
 	
 	private boolean isPasswordInvalid(String password) {
 		return !(password.length() >= 6 && password.length() <= 15 &&
-                password.matches(".*[a-zA-Z]+.*"));
+                password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*"));
+	}
+	
+	private String convertToHashPassword(String password){
+		String ret = "";
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
+			BigInteger number = new BigInteger(1, hash);
+			StringBuffer hexString = new StringBuffer(number.toString(16));
+			while (hexString.length() < 32) {
+				hexString.insert(0, "0");
+			}
+			ret = hexString.toString();	
+		} catch(NoSuchAlgorithmException e) {
+			ret = password;
+		}
+		return ret;
 	}
 }
