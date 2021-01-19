@@ -23,7 +23,7 @@
 	    </div>
 	    <div class="form-group">
 	      <label for="password">Password:</label>
-	      <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+	      <input type="password" class="form-control" id="password" placeholder="Enter password (6-15 long with eng and num)" name="password" required>
 	    </div>
 	    <input type="submit" class="btn btn-primary" value="註冊">
 	  </form>

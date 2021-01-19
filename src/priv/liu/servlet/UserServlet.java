@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import priv.liu.exception.EmptyInputException;
+import priv.liu.exception.InvalidPasswordException;
+import priv.liu.exception.UserExistException;
 import priv.liu.usecase.UserUseCase;
 
 @WebServlet("/UserServlet")
@@ -53,11 +56,23 @@ public class UserServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		boolean isRegister = _userUseCase.register(username, password);
-		username = (isRegister) ? username : null;
-		String page = (isRegister) ? "index.jsp" : "register.jsp";
+		String page = "register.jsp";
+		String errMsg = null;
+		try {
+			_userUseCase.register(username, password);
+			page = "index.jsp";
+		} catch (EmptyInputException emptyInputEx) {
+			username = null;
+			errMsg = emptyInputEx.getMessage();
+		} catch (UserExistException userExistEx) {
+			username = null;
+			errMsg = userExistEx.getMessage();
+		} catch (InvalidPasswordException invalidPasswordEx) {
+			username = null;
+			errMsg = invalidPasswordEx.getMessage();
+		}
 		session.setAttribute("username", username);
-		session.setAttribute("errMsg", "Username already registered. Please use other username!");
+		session.setAttribute("errMsg", errMsg);
 		response.sendRedirect(page);
 	}
 	
