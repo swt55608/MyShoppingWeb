@@ -5183,7 +5183,7 @@
 											"top": 775,
 											"width": 185.326171875,
 											"height": 13,
-											"text": "SupplierServlet"
+											"text": "SupplierFilter"
 										},
 										{
 											"_type": "LabelView",
@@ -5270,7 +5270,7 @@
 											"top": 808,
 											"width": 185.326171875,
 											"height": 13,
-											"text": "+showProducts(req, res)",
+											"text": "+doFilter(req, res)",
 											"horizontalAlignment": 0
 										}
 									],
@@ -22496,7 +22496,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "SupplierServlet",
+					"name": "SupplierFilter",
 					"ownedElements": [
 						{
 							"_type": "UMLAssociation",
@@ -22562,11 +22562,11 @@
 							"_parent": {
 								"$ref": "AAAAAAF0w1k16SffDvA="
 							},
-							"name": "showProducts",
+							"name": "doFilter",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
-									"_id": "AAAAAAF0w1lo7zSZFK8=",
+									"_id": "AAAAAAF3GeCORkwaJ+4=",
 									"_parent": {
 										"$ref": "AAAAAAF0w1lnCjPe+pc="
 									},
@@ -22575,7 +22575,7 @@
 								},
 								{
 									"_type": "UMLParameter",
-									"_id": "AAAAAAF0w1lo7zSapWg=",
+									"_id": "AAAAAAF3GeCORkwbcA8=",
 									"_parent": {
 										"$ref": "AAAAAAF0w1lnCjPe+pc="
 									},
