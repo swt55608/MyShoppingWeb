@@ -6,4 +6,3 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE (username)
 );
 
-INSERT INTO users (username, password) VALUES ('tester', 'tester');
